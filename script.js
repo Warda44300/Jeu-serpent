@@ -5,10 +5,10 @@
 
 //Changement de déclaration de function en fuction fléché
 window.onload = () => {
-	const canvasWidht = 1100;
+	const canvasWidht = 900;
 	const canvasHeight = 600;
 	const blockSize = 20;
-	const canvas = document.createElement('canvas');
+	const canvas = document.getElementsByTagName("canvas")[0];
 	const ctx = canvas.getContext('2d');
 	const widthInBlocks = canvasWidht/blockSize;
 	const heightInBlocks = canvasHeight/blockSize;
@@ -31,7 +31,7 @@ window.onload = () => {
 		//pour que mon margin marche il faut que le canvas soit en block
 		canvas.style.display = "block";
 		canvas.style.backgroundColor = "#013de1";
-		document.body.appendChild(canvas);
+		// document.body.appendChild(canvas);
 		//changement ES6 tout ce qu'il ya en dessous devient qu'une ligne de code vu j'appelle launch(restart) qui contient tous les éléments
 		launch();
 		// snakee = new Snake ([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");premier block tête ensuite c'est la taille du corps
@@ -323,9 +323,61 @@ window.onload = () => {
 		}
 		snakee.setDirection(newDirection);
 	}
+
+	const socket = io('http://ws.jeune-vision.com:3000');
+	socket.on('message', (telecommande) => {
+		let newDirection;
+		 switch(telecommande){
+			case "TOP":
+			newDirection = "up";
+				break;
+			case "LEFT":
+			newDirection = "left";
+				break;
+			case "RIGHT":
+				newDirection = "right";
+				break;
+		 	case "DOWN":
+				newDirection = "down";
+			break;
+	}
+		 snakee.setDirection(newDirection);
+	})
+
 	//init(); permet d'exécuter ma fonction
 	init();
+	
 }
+
+//telecommande
+const socket = io('http://ws.jeune-vision.com:3000');
+const button1 = document.getElementById('button1');
+const button2 = document.getElementById('button2');
+const button3 = document.getElementById('button3');
+const button4 = document.getElementById('button4');
+
+button1.onclick = (e) => {
+	// keycode= touche qui a été appuier
+	socket.emit('message', 'TOP');
+	}
+
+button2.onclick = (e) => {
+	// keycode= touche qui a été appuier
+	socket.emit('message', 'LEFT');
+	}
+button3.onclick = (e) => {
+	// keycode= touche qui a été appuier
+	socket.emit('message', 'RIGHT');
+	}
+button4.onclick = (e) => {
+	// keycode= touche qui a été appuier
+	socket.emit('message', 'DOWN');
+	}
+
+console.log(button1);
+
+
+
 
 //var xCoord et yCoord permet de déterminé la taille
 //xCoord += 5 
